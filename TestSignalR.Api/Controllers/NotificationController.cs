@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using TestSignalR.Api.Hubs;
-using TestSignalR.Api.Models;
 
 namespace TestSignalR.Api.Controllers
 {
@@ -16,13 +15,24 @@ namespace TestSignalR.Api.Controllers
             _hubContext = hubContext;
         }
 
+        //TODO: da autorizzare tramite api key
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Message message)
+        public async Task<IActionResult> Post([FromQuery] Guid operationId)
         {
-            var connectionId = NotificationHub.GetConnectionId(message.UserId);
+            string userId = "testUser"; //TODO: prendere userId dall'httpcontext
+
+            //TODO: fare una chiamata ad appstream con lo userId
+            var response = new
+            {
+                //RESPONSE: file group e userId
+                FileGroup = "testFileGroup",
+                UserId = userId
+            };
+
+            var connectionId = NotificationHub.GetConnectionId(userId);
             if (connectionId != null)
             {
-                await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveMessages", message.Data);
+                await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveMessages", response.FileGroup);
                 return Ok();
             }
 
