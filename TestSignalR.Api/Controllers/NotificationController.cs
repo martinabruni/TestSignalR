@@ -28,15 +28,5 @@ namespace TestSignalR.Api.Controllers
 
             return NotFound("User not connected");
         }
-
-        [HttpGet]
-        public IActionResult GetRegisteredUsers()
-        {
-            // This is a simple way to get all registered users for debugging
-            var users = new List<string>();
-            // We can't directly access the static dictionary from here easily,
-            // so let's return a simple response
-            return Ok(new { message = "Check server console for registered users" });
-        }
     }
 }

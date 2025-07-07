@@ -9,10 +9,7 @@ namespace TestSignalR.Api.Hubs
 
         public Task RegisterUser(string userId)
         {
-            Console.WriteLine($"Registering user: {userId} with connection ID: {Context.ConnectionId}");
             _userConnections[userId] = Context.ConnectionId;
-            Console.WriteLine($"Total registered users: {_userConnections.Count}");
-            Console.WriteLine($"All registered users: {string.Join(", ", _userConnections.Keys)}");
             return Task.CompletedTask;
         }
 
@@ -38,9 +35,7 @@ namespace TestSignalR.Api.Hubs
             var userToRemove = _userConnections.FirstOrDefault(kvp => kvp.Value == Context.ConnectionId);
             if (!userToRemove.Equals(default(KeyValuePair<string, string>)))
             {
-                Console.WriteLine($"User {userToRemove.Key} disconnected, removing from registry");
                 _userConnections.TryRemove(userToRemove.Key, out _);
-                Console.WriteLine($"Total registered users after removal: {_userConnections.Count}");
             }
 
             await base.OnDisconnectedAsync(exception);
